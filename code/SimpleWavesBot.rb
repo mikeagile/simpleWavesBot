@@ -7,7 +7,7 @@ require 'json'
 
 def idspot(name)
   id='nil'
-  file = File.read ("/NFS/code/vlabs/botEslangTelegram/example/spots.json")
+  file = File.read ("/data/spots.json")
   data = JSON.parse(file)
   data.each do |item|
      if item['name'] == name
@@ -18,14 +18,14 @@ def idspot(name)
 end
 
 logger = Logger.new("/NFS/logs/vlabs/simpleWavesBot/simpleWavesBot.log", Logger::DEBUG)
-bot = TelegramBot.new(token: '237883760:AAHCho038ONr33cVnBtF1NJhr5nyQ0S-pdU', logger: logger)
+bot = TelegramBot.new(token: 'yourApiKey', logger: logger)
 logger.debug "starting telegram bot"
 bot.get_updates(fail_silently: true) do |message|
   logger.info "@#{message.from.username}: #{message.text}"
   command = message.get_command_for(bot)
   message.reply do |reply|
-    if idspot(command) != 'nil'
-      url = 'http://magicseaweed.com/api/KoCVx0qvAGqk167gn7FXk5brw2GLj2gB/forecast/?spot_id=' + idspot(command)
+    if idspot(command.downcase) != 'nil'
+      url = 'http://magicseaweed.com/api/yourApiKey/forecast/?spot_id=' + idspot(command.downcase)
       uri = URI(url)
       response = Net::HTTP.get(uri)
       data = JSON.parse(response)
